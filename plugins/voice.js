@@ -38,10 +38,6 @@ cmd({
 ╰────────────────┈⊷
 ╭━━❐━⪼
 ┇๏ *Title* -  ${songData.title}
-┇๏ *Duration* - ${songData.timestamp}
-┇๏ *Uploader* -  ${songData.author.name}
-┇๏ *Release Date* -  ${songData.ago}
-┇๏ *Views* -  ${songData.views}
 ┇๏ *Url* -  ${songData.url}
 ╰━━❑━⪼
 
