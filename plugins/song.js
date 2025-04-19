@@ -1,158 +1,109 @@
-const { cmd, commands } = require("../command");
-const yts = require("yt-search");
-const { ytmp3 } = require("@vreden/youtube_scraper");
+/*
 
-cmd(
-{
-pattern: "song",
-alias: "ytmp3", // Add a comma here
-react: "🎵",
-desc: "Download Song",
-category: "download",
-filename: __filename,
-},
-async (
-robin,
-mek,
-m,
-{
-from,
-quoted,
-body,
-isCmd,
-command,
-args,
-q,
-isGroup,
-sender,
-senderNumber,
-botNumber2,
-botNumber,
-pushname,
-isMe,
-isOwner,
-groupMetadata,
-groupName,
-participants,
-groupAdmins,
-isBotAdmins,
-isAdmins,
-reply,
-}
-) => {
-try {
-if (!q) return reply("නමක් හරි ලින්ක් එකක් හරි දෙන්න 🌚❤️");
+Plugin Author: *@DarkYasiya*
+Follow Us: *https://whatsapp.com/channel/0029VaaPfFK7Noa8nI8zGg27*
 
-// Search for the video  
-  const search = await yts(q);  
-  if (!search.videos.length) return reply("❌ Video not found!");  
+*/
 
-  const data = search.videos[0];  
-  const url = data.url;  
+```const config = require('../config');
+const { cmd } = require('../command');
+const DY_SCRAP = require('@dark-yasiya/scrap');
+const dy_scrap = new DY_SCRAP();
 
-  // Song metadata description  
-  let desc = `
-
-⛶ꜱʜᴀꜱɴɪ-ᴍᴅ ꜱᴏɴɢ ᴅᴏᴡɴʟᴏᴀᴅ⛶
-✇━━━━━━━━━━━━━━━━━━━━✇
-
-⛛
-⛛
-⛛
-╔═══◈ 🎧 Now Playing... ◈═══╗
-═════════════════════
-
-📌 Title:  ${data.title}
-✇━━━━━━━━━━━━━━━━━━━
-⏳ Duration:  ${data.timestamp}
-✇━━━━━━━━━━━━━━━━━━━
-📅 Uploaded:  ${data.ago}
-✇━━━━━━━━━━━━━━━━━━━
-👀 Views:  ${data.views}
-✇━━━━━━━━━━━━━━━━━━━
-🔗 Listen Here:  ${data.url}
-✇━━━━━━━━━━━━━━━━━━━
-
-╠═══════════════════════════╣
-⬇️ Fetching & Downloading...
-╚═══════════════════════════╝
-
-🧑‍💻 ꜱʜᴀꜱɴɪ-ᴍᴅ ᴡʜᴀᴛꜱᴀᴘᴘ ʙᴏᴛ 👨‍💻
-👨‍💻 ꜱʜᴀꜱɴɪ-ᴍᴅ ᴄʀᴇᴀᴛᴇᴅ ʙʏ ᴅᴇɴᴜᴡᴀɴ ᴋᴀᴜꜱʜɪᴋᴀ 👨‍💻
-`;
-
-// Send externalAdReply with views under channel name  
-  await robin.sendMessage(  
-    from,  
-    {  
-      text: desc,  
-      contextInfo: {  
-        externalAdReply: {  
-          title: "ꜱʜᴀꜱɴɪ-ᴍᴅ",  
-          body: `👀 Views: ${data.views}`, // Views count below the channel name  
-          thumbnail: { url: data.thumbnail },  
-          sourceUrl: "https://whatsapp.com/channel/0029Vb2bq7tCHDyi6w2zfG0r",  
-          mediaType: 1,  
-          renderLargerThumbnail: true,  
-        },  
-      },  
-    },  
-    { quoted: mek }  
-  );  
-
-  // Send metadata thumbnail message  
-/*await robin.sendMessage(  
-    from,  
-    { image: { url: data.thumbnail }, caption: desc },  
-    { quoted: mek }  
-  );*/  
-
-  // Download the audio using @vreden/youtube_scraper  
-  const quality = "128"; // Default quality  
-  const songData = await ytmp3(url, quality);  
-
-  if (!songData || !songData.download || !songData.download.url) {  
-    return reply("❌ Failed to download the song!");  
-  }  
-
-  // Validate song duration (limit: 30 minutes)  
-  let durationParts = data.timestamp.split(":").map(Number);  
-  let totalSeconds =  
-    durationParts.length === 3  
-      ? durationParts[0] * 3600 + durationParts[1] * 60 + durationParts[2]  
-      : durationParts[0] * 60 + durationParts[1];  
-
-  if (totalSeconds > 1800) {  
-    return reply("⏱️ Audio limit is 30 minutes!");  
-  }  
-
-  // Send audio file  
-  await robin.sendMessage(  
-    from,  
-    {  
-      audio: { url: songData.download.url },  
-      mimetype: "audio/mpeg",  
-    },  
-    { quoted: mek }  
-  );  
-
-  // Send as a document  
-  await robin.sendMessage(  
-    from,  
-    {  
-      document: { url: songData.download.url },  
-      mimetype: "audio/mpeg",  
-      fileName: `${data.title}.mp3`,  
-      caption: "> ꜱʜᴀꜱɴɪ-ᴍᴅ ʙʏ ᴅᴇɴᴜᴡᴀɴ ᴋᴀᴜꜱʜɪᴋᴀ ❤️",  
-    },  
-    { quoted: mek }  
-  );  
-
-  return reply("*✅ Download complete! Enjoy your song!*");  
-} catch (e) {  
-  console.error(e);  
-  reply(`❌ Error: ${e.message}`);  
+function replaceYouTubeID(url) {
+    const regex = /(?:youtube\.com\/(?:.*v=|.*\/)|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/shorts\/)([a-zA-Z0-9_-]{11})/;
+    const match = url.match(regex);
+    return match ? match[1] : null;
 }
 
-}
-);
+cmd({
+    pattern: "song",
+    alias: ["ytmp3", "ytmp3dl"],
+    react: "🎵",
+    desc: "Download Ytmp3",
+    category: "download",
+    use: ".song <Text or YT URL>",
+    filename: __filename
+}, async (conn, m, mek, { from, q, reply }) => {
+    try {
+        if (!q) return await reply("❌ Please provide a Query or Youtube URL!");
+
+        let id = q.startsWith("https://") ? replaceYouTubeID(q) : null;
+
+        if (!id) {
+            const searchResults = await dy_scrap.ytsearch(q);
+            if (!searchResults?.results?.length) return await reply("❌ No results found!");
+            id = searchResults.results[0].videoId;
+        }
+
+        const data = await dy_scrap.ytsearch(`https://youtube.com/watch?v=${id}`);
+        if (!data?.results?.length) return await reply("❌ Failed to fetch video!");
+
+        const { url, title, image, timestamp, ago, views, author } = data.results[0];
+
+        let info = `🍄 *𝚂𝙾𝙽𝙶 𝙳𝙾𝚆𝙽𝙻𝙾𝙰𝙳𝙴𝚁* 🍄\n\n` +
+            `🎵 *Title:* ${title || "Unknown"}\n` +
+            `⏳ *Duration:* ${timestamp || "Unknown"}\n` +
+            `👀 *Views:* ${views || "Unknown"}\n` +
+            `🌏 *Release Ago:* ${ago || "Unknown"}\n` +
+            `👤 *Author:* ${author?.name || "Unknown"}\n` +
+            `🖇 *Url:* ${url || "Unknown"}\n\n` +
+            `🔽 *Reply with your choice:*\n` +
+            `1️⃣.1️⃣ *Audio Type* 🎵\n` +
+            `1️⃣.2️⃣ *Document Type* 📁\n\n` +
+            `${config.FOOTER || "POWERED BY SHASINI MD"}`;
+
+        const sentMsg = await conn.sendMessage(from, { image: { url: image }, caption: info }, { quoted: mek });
+        const messageID = sentMsg.key.id;
+        await conn.sendMessage(from, { react: { text: '🎶', key: sentMsg.key } });
+
+        // Listen for user reply only once!
+        conn.ev.on('messages.upsert', async (messageUpdate) => { 
+            try {
+                const mekInfo = messageUpdate?.messages[0];
+                if (!mekInfo?.message) return;
+
+                const messageType = mekInfo?.message?.conversation || mekInfo?.message?.extendedTextMessage?.text;
+                const isReplyToSentMsg = mekInfo?.message?.extendedTextMessage?.contextInfo?.stanzaId === messageID;
+
+                if (!isReplyToSentMsg) return;
+
+                let userReply = messageType.trim();
+                let msg;
+                let type;
+                let response;
+                
+                if (userReply === "1.1") {
+                    msg = await conn.sendMessage(from, { text: "⏳ Processing..." }, { quoted: mek });
+                    response = await dy_scrap.ytmp3(`https://youtube.com/watch?v=${id}`);
+                    let downloadUrl = response?.result?.download?.url;
+                    if (!downloadUrl) return await reply("❌ Download link not found!");
+                    type = { audio: { url: downloadUrl }, mimetype: "audio/mpeg" };
+                    
+                } else if (userReply === "1.2") {
+                    msg = await conn.sendMessage(from, { text: "⏳ Processing..." }, { quoted: mek });
+                    const response = await dy_scrap.ytmp3(`https://youtube.com/watch?v=${id}`);
+                    let downloadUrl = response?.result?.download?.url;
+                    if (!downloadUrl) return await reply("❌ Download link not found!");
+                    type = { document: { url: downloadUrl }, fileName: `${title}.mp3`, mimetype: "audio/mpeg", caption: title };
+                    
+                } else { 
+                    return await reply("❌ Invalid choice! Reply with 1️⃣.1️⃣ or 1️⃣.2️⃣.");
+                }
+
+                await conn.sendMessage(from, type, { quoted: mek });
+                await conn.sendMessage(from, { text: '✅ Media Upload Successful ✅', edit: msg.key });
+
+            } catch (error) {
+                console.error(error);
+                await reply(`❌ *An error occurred while processing:* ${error.message || "Error!"}`);
+            }
+        });
+
+    } catch (error) {
+        console.error(error);
+        await conn.sendMessage(from, { react: { text: '❌', key: mek.key } });
+        await reply(`❌ *An error occurred:* ${error.message || "Error!"}`);
+    }
+});
+```
