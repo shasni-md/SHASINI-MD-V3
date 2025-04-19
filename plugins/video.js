@@ -27,7 +27,7 @@ cmd({
             return reply("⚠️ Failed to fetch the video. Please try again later.");
         }
 
-        let ytmsg = `╭━━━〔 *🎭 FRONEXT MD 🃏* 〕━━━┈⊷
+        let ytmsg = `╭━━━〔 *🎭 SHASINI MD 🃏* 〕━━━┈⊷
 ┃▸╭─────────────────
 ┃▸┃ 📽️ *VIDEO DOWNLOADER*
 ┃▸└─────────────────···
@@ -40,7 +40,7 @@ cmd({
 ┇🔗 *Link:* ${yts.url}
 ╰━━❑━⪼
 
-*💫 Quality Video Downloader By FRONEXT MD*`;
+*💫 Quality Video Downloader By Shasini md*`;
 
         await conn.sendMessage(from, { image: { url: yts.thumbnail || '' }, caption: ytmsg }, { quoted: mek });
         await conn.sendMessage(from, { video: { url: data.result.download_url }, mimetype: "video/mp4" }, { quoted: mek });
@@ -48,7 +48,7 @@ cmd({
             document: { url: data.result.download_url }, 
             mimetype: "video/mp4", 
             fileName: `${yts.title}.mp4`, 
-            caption: `🎥 *${yts.title}*\n\n*🌟 Created By:* Cyber Froly\n*🤖 Bot:* FRONEXT MD`
+            caption: `🎥 *${yts.title}*\n\n*🌟 Created By:* Cyber Froly\n*🤖 Bot:* SHASINI MD`
         }, { quoted: mek });
 
     } catch (e) {
