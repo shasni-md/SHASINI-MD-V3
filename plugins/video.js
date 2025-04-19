@@ -48,7 +48,7 @@ cmd({
             document: { url: data.result.download_url }, 
             mimetype: "video/mp4", 
             fileName: `${yts.title}.mp4`, 
-            caption: `🎥 *${yts.title}*\n\n*🌟 Created By:* Cyber Froly\n*🤖 Bot:* SHASINI MD`
+            caption: `🎥 *${yts.title}*\n\n*🌟 Created By:* Mr Denuwan\n*🤖 Bot:* SHASINI MD`
         }, { quoted: mek });
 
     } catch (e) {
