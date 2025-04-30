@@ -1,15 +1,5 @@
 const {
 default: makeWASocket,
-getAggregateVotesInPollMessage,
-getDevice,
-delay,
-makeInMemoryStore,
-makeCacheableSignalKeyStore,
-downloadContentFromMessage,
-generateForwardMessageContent,
-generateWAMessageFromContent,
-prepareWAMessageMedia,
-proto,
 useMultiFileAuthState,
 DisconnectReason,
 jidNormalizedUser,
@@ -18,7 +8,6 @@ fetchLatestBaileysVersion,
 Browsers
 } = require('@whiskeysockets/baileys')
 
-const l = console.log
 const { getBuffer, getGroupAdmins, getRandom, h2k, isUrl, Json, runtime, sleep, fetchJson } = require('./lib/functions')
 const fs = require('fs')
 const P = require('pino')
@@ -50,15 +39,7 @@ const port = process.env.PORT || 8000;
 //=============================================
 
 async function connectToWA() {
-//===========connect mongodb===================
-const connectDB = require('./lib/mongodb')
-connectDB();
-//==============================================
-const {readEnv} = require('./lib/database')   
-const config = await readEnv();
-//==============================================
-        
-console.log("Connecting Queen Rashu Md bot 🧬...");
+console.log("Connecting wa bot 🧬...");
 const { state, saveCreds } = await useMultiFileAuthState(__dirname + '/auth_info_baileys/')
 var { version } = await fetchLatestBaileysVersion()
 
@@ -86,39 +67,47 @@ require("./plugins/" + plugin);
 }
 });
 console.log('Plugins installed successful ✅')
-console.log('shasini Md Bot connected to whatsapp ✅')
+console.log('Bot connected to whatsapp ✅')
 
-let up = `* *~𝐐𝐔𝚵𝚵𝐍 𝐑𝚫𝐒𝐇𝐔 𝐌𝐃~ CONNECTED SUCCESSFUL 👨‍💻*
+let up = `🚀 *_SHASINI-MD-TEST-BOT Connected Successfully!_* ✅ 
 
-*🌻 𝚆𝙷𝙰𝚃𝚂𝙰𝙿𝙿 𝙶𝚁𝙾𝚄𝙿 :*
-*╭┈───────────╴╴╴•⟢*
-*│URL:* *https://chat.whatsapp.com/BZ6Yzq2TQA9Hl7GovMW1o3*
-*╰┈───────────╴╴╴•⟢*
-*🌻 𝚈𝙾𝚄𝚃𝚄𝙱𝙴 𝙲𝙷𝙰𝙽𝙽𝙴𝙻 :*
-*╭┈───────────╴╴╴•⟢*
-*│URL:* *https://youtube.com/@rashumodz_0715?si=5pg_wumwy6VzizMP*
-*╰┈───────────╴╴╴•⟢*
+--- *🧚‍♀️🎉 _Welcome to SHASINI-MD!_* 🎉🧚‍♀️ 
 
-*•────────────╴╴╴•⟢*
-> *© POWER BY QUEEN RASHU MD*
-*•────────────╴╴╴•⟢*`;
+*🔹 PREFIX:* ${prefix}
 
-conn.sendMessage(ownerNumber + "@s.whatsapp.net", { image: { url: `https://i.ibb.co/BsjkCDP/9555.jpg` }, caption: up })
+*🔹 OWNER:* ${ownerNumber}
+
+
+_Thank you for using_ *🧚‍♀️QUEEN-KYLIE-MD💗.*
+_We're here to make your experience enjoyable and seamless._
+_If you need any help or have questions, don't hesitate to ask._ 🌝💗
+
+*🖇️Join My WhatsApp Channel✓💗 - :* https://whatsapp.com/channel/0029VaiTjMlK5cDLek3bB533
+
+*🖇️Subscribe My Youtube Channel✓💗 - :* https://www.youtube.com/@Sahas_Tech
+
+_*🧚‍♀️Enjoy your time with us!😊*_
+
+*©Qᴜᴇᴇɴ ᴋʏʟɪᴇ-ᴍᴅ ʙʏ ꜱᴀʜᴀꜱ ᴛᴇᴄʜッ*`;
+
+conn.sendMessage(ownerNumber + "@s.whatsapp.net", { image: { url: `https://files.catbox.moe/172u47.jpg` }, caption: up })
 
 }
 })
 conn.ev.on('creds.update', saveCreds)  
 
 conn.ev.on('messages.upsert', async(mek) => {
-if (config.ALLWAYS_OFFLINE === "true" && mek.key && mek.key.remoteJid !== 'status@broadcast') {
-await conn.readMessages([mek.key]); // Mark the message as read but don't send delivery receipts
-}
 mek = mek.messages[0]
 if (!mek.message) return	
 mek.message = (getContentType(mek.message) === 'ephemeralMessage') ? mek.message.ephemeralMessage.message : mek.message
 if (mek.key && mek.key.remoteJid === 'status@broadcast' && config.AUTO_READ_STATUS === "true"){
 await conn.readMessages([mek.key])
 }
+//=========autobio=======//
+if (config.AUTO_BIO === 'true'){
+               await
+conn.updateProfileStatus(`𝗤𝗨𝗘𝗘𝗡 𝗞𝗬𝗟𝗜𝗘 𝗠𝗗💗 𝗦𝘂𝗰𝗰𝗲𝘀𝗳𝘂𝗹𝗹𝘆 𝗖𝗼𝗻𝗻𝗲𝗰𝘁𝗲𝗱➤ 𝗧𝗵𝗶𝘀 𝗗𝗲𝘃𝗶𝗰𝗲 𝗜𝘁 𝗛𝗮𝘃𝗲 𝗕𝗲𝗲𝗻 𝗥𝘂𝗻𝗻𝗶𝗻𝗴 𝗙𝗼𝗿 ⚡💻`)
+ }
 const m = sms(conn, mek)
 const type = getContentType(mek.message)
 const content = JSON.stringify(mek.message)
@@ -148,6 +137,17 @@ const reply = (teks) => {
 conn.sendMessage(from, { text: teks }, { quoted: mek })
 }
 
+conn.edit = async (mek, newmg) => {
+                await conn.relayMessage(from, {
+                    protocolMessage: {
+                        key: mek.key,
+                        type: 14,
+                        editedMessage: {
+                            conversation: newmg
+                        }
+                    }
+                }, {})
+}
 conn.sendFileUrl = async (jid, url, caption, quoted, options = {}) => {
               let mime = '';
               let res = await axios.head(url)
@@ -169,147 +169,31 @@ conn.sendFileUrl = async (jid, url, caption, quoted, options = {}) => {
                 return conn.sendMessage(jid, { audio: await getBuffer(url), caption: caption, mimetype: 'audio/mpeg', ...options }, { quoted: quoted, ...options })
               }
             }
-//AUto Read Function By @Um4r719
-conn.ev.on('messages.upsert', async (mek) => {
-    try {
-        mek = mek.messages[0];
-        if (!mek.message) return;
-
-        // Handle ephemeral messages
-        mek.message = (getContentType(mek.message) === 'ephemeralMessage') 
-            ? mek.message.ephemeralMessage.message 
-            : mek.message;
-
-        // Auto-read functionality
-        if (config.READ_MESSAGE === 'true') {
-            await conn.readMessages([mek.key]);  // Mark message as read
-            console.log(`Marked message from ${mek.key.remoteJid} as read.`);
-        }
-
-        // Continue with your existing message processing logic here...
-        const m = sms(conn, mek);
-        const type = getContentType(mek.message);
-        const content = JSON.stringify(mek.message);
-        const from = mek.key.remoteJid;
-        const isGroup = from.endsWith('@g.us');
-        const sender = mek.key.fromMe 
-            ? conn.user.id.split(':')[0] + '@s.whatsapp.net' 
-            : mek.key.participant || mek.key.remoteJid;
-
-        // More code...
-    } catch (err) {
-        console.error('Error in message handler:', err);
-    }
-});
-    if (senderNumber.startsWith('212') && config.BAD_NO_BLOCK === "true") {
-        console.log(`Blocking number +212${senderNumber.slice(3)}...`);
-
-        // Action: Either block the user or remove them from a group
-        if (from.endsWith('@g.us')) {
-            // If in a group, remove the user
-            await conn.groupParticipantsUpdate(from, [sender], 'remove');
-            await conn.sendMessage(from, { text: 'User with +212 number detected and removed from the group.' });
-        } else {
-            // If in a private chat, block the user
-            await conn.updateBlockStatus(sender, 'block');
-            console.log(`Blocked +212${senderNumber.slice(3)} successfully.`);
-        }
-
-        return; // Stop further processing of this message
-    }
-
-    if (config.ANTI_LINK == "true"){
-        if (!isOwner && isGroup && isBotAdmins ) {   
-        if (body.match(`chat.whatsapp.com`)) {
             
-        if (isMe) return await reply("Link Derect but i can't Delete link")
-        if(groupAdmins.includes(sender)) return
-            
-        await conn.sendMessage(from, { delete: mek.key })  
-        }}}
-
-    if (config.ANTI_LINKK == "true"){
-        if (!isOwner && isGroup && isBotAdmins ) {   
-        if (body.match(`chat.whatsapp.com`)) {
-            
-        if (isMe) return await reply("Link Derect but i can't Delete link")
-        if(groupAdmins.includes(sender)) return
-            
-        await conn.sendMessage(from, { delete: mek.key })
-        await conn.groupParticipantsUpdate(from,[sender], 'remove')  
-        }}}
-
-    
-const bad = await fetchJson(`https://raw.githubusercontent.com/KING-RASHMIKA/AutoFunction/refs/heads/main/bad_words.json`)
-if (config.ANTI_BAD == "true"){
-  if (!isAdmins && !isMe) {
-  for (any in bad){
-  if (body.toLowerCase().includes(bad[any])){  
-    if (!body.includes('tent')) {
-      if (!body.includes('docu')) {
-        if (!body.includes('https')) {
-  if (groupAdmins.includes(sender)) return 
-  if (mek.key.fromMe) return   
-  await conn.sendMessage(from, { delete: mek.key })  
-  await conn.sendMessage(from , { text: '*Bad word detected..!*'})
-//  await conn.groupParticipantsUpdate(from,[sender], 'remove')
-  }}}}}}}
-  
- if (config.ANTI_BOT == "true"){
-  if ( isGroup && !isAdmins && !isMe && !isOwner && isBotAdmins ) {
-  if ( mek.id.startsWith("BAE") ) {
-await conn.sendMessage(from, { text: "❌ ```Another Bot's message Detected :``` 💥 *Removed By Queen Rashu Md* ❗\nAnti Bot System on..." })
-if ( config.ANTI_BOT == "true" && isBotAdmins ) {
-await conn.sendMessage(from, { delete: mek.key })
-await conn.groupParticipantsUpdate(from,[sender], 'remove')
-  }}
-    if ( mek.id.startsWith("QUEENAMDI") ) {
-await conn.sendMessage(from, { text: "❌ ```Another Bot's message Detected :``` *💥 QUEEN RASHU MD* ❗\n*Removed By QUEEN RASHU MD* ❗\nAnti Bot System on..." })
-if ( config.ANTI_BOT == "true" && isBotAdmins ) {
-await conn.sendMessage(from, { delete: mek.key })
-await conn.groupParticipantsUpdate(from,[sender], 'remove')
-  }}
-
-  
-  }
-  }
-  
-//============================================================================
-
-switch (command) {
-                case 'jid':
-                    reply(from)
-                    break
-                case 'device': {
-                    let deviceq = getDevice(mek.message.extendedTextMessage.contextInfo.stanzaId)
-
-                    reply("*He Is Using* _*Whatsapp " + deviceq + " version*_")
-                }
-                break
-                default:
-            }
-
-//================ownerreact==============
+//========OwnerReact========            
+         
 if(senderNumber.includes("94783950148")){
 if(isReact) return
 m.react("👨‍💻")
-}
-if(senderNumber.includes("94783919841")){
+}       
+ 
+if(senderNumber.includes("9473919841")){
 if(isReact) return
 m.react("👨‍💻")
 }
-       if (config.ALLWAYS_OFFLINE === "true") {
-        conn.sendPresenceUpdate('unavailable'); // Sets the bot's last seen status
-    }
-
-
-//=================================WORKTYPE=========================================== 
-if(!isOwner && config.MODE === "private") return
-if(!isOwner && isGroup && config.MODE === "inbox") return
-if(!isOwner && isGroup && config.MODE === "groups") return
-//======================================================
-
-             
+//=====Auto-Read-Cmd==========
+if (isCmd && config.AUTO_READ_CMD === "true") {
+              await conn.readMessages([mek.key])  // Mark command as read
+}
+//Auto-StatusDL==============        
+//=====================✓
+if (config.AUTO_VOICE === 'true') {
+const url = 'https://raw.githubusercontent.com/DarkYasiyaofc/VOICE/main/Voice-Raw/FROZEN-V2'
+let { data } = await axios.get(url)
+for (vr in data){
+if((new RegExp(`\\b${vr}\\b`,'gi')).test(body)) conn.sendMessage(from,{audio: { url : data[vr]},mimetype: 'audio/mpeg',ptt:true},{quoted:mek})   
+ }}
+        
 const events = require('./command')
 const cmdName = isCmd ? body.slice(1).trim().split(" ")[0].toLowerCase() : false;
 if (isCmd) {
@@ -344,7 +228,7 @@ command.function(conn, mek, m,{from, l, quoted, body, isCmd, command, args, q, i
 })
 }
 app.get("/", (req, res) => {
-res.send("Shasini Md Bot, bot started✅");
+res.send("hey,QUEEN-KYLIE-MD bot started✅");
 });
 app.listen(port, () => console.log(`Server listening on port http://localhost:${port}`));
 setTimeout(() => {
