@@ -14,7 +14,7 @@ AUTO_VOICE: process.env.AUTO_VOICE || "true", // true or false
 AUTO_REPLY: process.env.AUTO_REPLY || "true", // true or false  
 IMAGE_LIMIT: process.env.IMAGE_LIMIT || "3",
 ALIVE_IMG: process.env.ALIVE_IMG || "https://i.ibb.co/tC37Q7B/20241220-122443.jpg",
-SESSION_ID: process.env.SESSION_ID || "UqVE3Y5R#OeeRLQM_KMTaeHGT2lLOiJ7qgWdTHw8anpPpgvOPC3Y",
+SESSION_ID: process.env.SESSION_ID || "F3sV2YTa#vgpec1omVjImg_VwO3MTXy5Nt0yoLnnFY9x_7JUXCk4",
 OWNER_NUMBER: process.env.SESSION_ID || "94783919841",
 PREFIX: process.env.PREFIX || ".",
 ANTI_DELETE: process.env.ANTI_DELETE || "true"
